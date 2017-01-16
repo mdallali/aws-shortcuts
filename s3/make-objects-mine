@@ -1,0 +1,26 @@
+#!/bin/bash
+# this script will acuire the list of objects not owned by the bucket owner and make them owned by the latter.
+
+if [[ -z $1 ]]; then
+	echo "Usage $0 bucket_name [prefix] : bucket name must be specified [prefix is optional]"
+	exit 1
+fi
+
+# set the bucket name
+bucket=$1
+
+# set a prefix (optional, if not set, this will apply to the whole bucket)
+defaultPrefix=""
+PREFIX=${2:-$defaultPrefix}
+
+#get the canonical user ID for the bucket owner
+accountID="$(aws s3api list-buckets --output text --query 'Owner.ID')"
+
+#find objects that are not owned by me
+
+for a in  $(aws s3api list-objects --bucket $bucket --prefix "$PREFIX" --output text --query  'Contents[?Owner.ID!=`'$accountID'`].Key');
+
+        do
+                echo "this is a key not owned my me" + $a
+                aws s3 cp s3://$bucket/$a s3://$bucket/$a --storage-class STANDARD
+        done
