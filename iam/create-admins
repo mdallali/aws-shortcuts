@@ -1,0 +1,58 @@
+#!/bin/bash
+
+ask_user () {  #asks y/n question to user
+	echo "$1 (y/n)"
+	stop="continue"
+	while [[ $stop != "stop" ]]; do 
+		read addPolicy
+		if [[ $addPolicy == "y" ]]; then
+			stop="stop"
+			echo "User chose to add admin policy to existing group"
+		elif [[ $addPolicy == "n" ]]; then
+			stop="stop"
+			echo "User chose not to add admin policy"
+			exit 1
+		else
+			echo "invalid answer $deleteKey. Has to be y for yes or n for no"
+		fi
+	done	
+}
+
+USERLIST=$*
+GROUP="Admins"
+POLICYNAME="FullAccess"
+POLICYDOCUMENT="file://policies/admin-policy"
+
+echo "Checking for Admins Group"
+
+CHECK=$(aws iam list-groups --output text | awk '{print $5}' | egrep '^Admins$')
+
+if [[ ! -z $CHECK ]]; then
+	echo "Admins Group exists, skipping creation"
+	echo -n "The script will assign admin level policy to the existing group."
+	ask_user "Confirm? "
+	#aws iam put-group-policy --group-name $GROUP --policy-name $POLICYNAME --policy-document $POLICYDOCUMENT
+else 
+	echo "Creating Admins Group"
+	#aws iam create-group --group-name $GROUP
+	echo "The script will assign admin level policy to the $GROUP Group"
+	#aws iam put-group-policy --group-name $GROUP --policy-name $POLICYNAME --policy-document $POLICYDOCUMENT
+fi
+
+
+echo $USERLIST
+
+for user in $USERLIST; do 
+	echo $user
+	#aws iam create-user --username $user
+	if [[ $? -eq 0 ]]; then
+		echo "successfully created $user"
+		for group in $GROUP; do 
+			echo "Adding $user to $group"
+			#aws iam add-user-to-group --user-name $user --group-name $group
+		done
+	else
+		echo "User $user could not be created"
+		continue
+	fi
+done
