@@ -1,5 +1,7 @@
 #!/bin/bash
-# this script will acuire the list of objects not owned by the bucket owner and make them owned by the latter.
+###############################################################################################################
+# this script will acuire the list of objects not owned by the bucket owner and make them owned by the latter.#
+###############################################################################################################
 
 if [[ -z $1 ]]; then
 	echo "Usage $0 bucket_name [prefix] : bucket name must be specified [prefix is optional]"
