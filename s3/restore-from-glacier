@@ -29,5 +29,5 @@ for a in  $(aws s3api list-objects --bucket $BUCKET --prefix "$PREFIX" --output 
 
         do
                 echo "Restoring the following Object  -->  "   $a
-		aws s3api restore-object --bucket $BUCKET --key $a --restore-request '{"Days": 90}' && echo "SUCCESS"
+		aws s3api restore-object --bucket $BUCKET --key $a --restore-request Days=$DAYS && echo "SUCCESS"
         done
