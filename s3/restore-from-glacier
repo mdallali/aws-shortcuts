@@ -9,6 +9,7 @@ if [[ -z $1 ]]; then
 	echo -e "  \e[32mbucket_name \e[39m: Name of the bucket from which to restore files"
 	echo -e "  \e[32mprefix \e[39m: prefix under which to look for files, defaults to \"\" which means whole bucket"
 	echo -e "  \e[32mrestore_days \e[39m: Restore the files for restore_days days, default to 10"
+	echo -e "  \e[32mType of restore \e[39m: Use Standard (default), Bulk or Expedited restore type"
 	exit 1
 fi
 
@@ -22,6 +23,9 @@ echo "Chosen Prefix : $PREFIX"
 defaultDays=10
 DAYS=${3:-$defaultDays}
 echo "Number of restore days : $DAYS"
+defaultTier="Standard"
+TIER=${4:-$defaultTier}
+echo "Type of Restore Job : $TIER"
 
 set -e 
 # get the list of the objects that are stored in Glacier
@@ -29,5 +33,5 @@ for a in  $(aws s3api list-objects --bucket $BUCKET --prefix "$PREFIX" --output 
 
         do
                 echo "Restoring the following Object  -->  "   $a
-		aws s3api restore-object --bucket $BUCKET --key $a --restore-request Days=$DAYS && echo "SUCCESS"
+		aws s3api restore-object --bucket $BUCKET --key $a --restore-request Days=$DAYS,GlacierJobParameters={Tier=$TIER} && echo "SUCCESS"
         done
