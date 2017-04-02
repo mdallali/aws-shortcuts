@@ -31,25 +31,25 @@ if [[ ! -z $CHECK ]]; then
 	echo "Admins Group exists, skipping creation"
 	echo -n "The script will assign admin level policy to the existing group."
 	ask_user "Confirm? "
-	#aws iam put-group-policy --group-name "$GROUP" --policy-name "$POLICYNAME" --policy-document "$POLICYDOCUMENT"
+	aws iam put-group-policy --group-name "$GROUP" --policy-name "$POLICYNAME" --policy-document "$POLICYDOCUMENT"
 else 
 	echo "Creating Admins Group"
-	#aws iam create-group --group-name $GROUP
+	aws iam create-group --group-name "$GROUP"
 	echo "The script will assign admin level policy to the $GROUP Group"
-	#aws iam put-group-policy --group-name "$GROUP" --policy-name "$POLICYNAME" --policy-document "$POLICYDOCUMENT"
+	aws iam put-group-policy --group-name "$GROUP" --policy-name "$POLICYNAME" --policy-document "$POLICYDOCUMENT"
 fi
 
 
-echo $USERLIST
+echo "$USERLIST"
 
-for user in "$USERLIST"; do 
+for user in $USERLIST; do 
 	echo "$user"
-	#aws iam create-user --username $user
+	aws iam create-user --user-name "$user"
 	if [[ $? -eq 0 ]]; then
 		echo "successfully created $user"
 		for group in $GROUP; do 
 			echo "Adding $user to $group"
-			#aws iam add-user-to-group --user-name $user --group-name $group
+			aws iam add-user-to-group --user-name "$user" --group-name "$group"
 		done
 	else
 		echo "User $user could not be created"
