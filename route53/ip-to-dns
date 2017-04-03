@@ -1,0 +1,22 @@
+#!/bin/bash
+
+###############################################################
+### Looks in all your Route 53 Hosted zones for record sets ###
+###             matching the Given IP address               ###
+###############################################################
+
+
+if [[ $# -eq 0 ]]; then
+	echo "$0 : an IP address must be supplied as an argument"
+	exit 1
+fi
+
+#Get your hosted Zones IDs, this is needed for searching after
+hostedZones=$(aws route53 list-hosted-zones --output text | grep hostedzone | awk '{print $3}' | sed 's/\/hostedzone\///g')
+
+for hz in $hostedZones; do
+	echo "Looking for $1 in hosted zone $hz"
+	aws route53 list-resource-record-sets --hosted-zone-id "$hz" --output text | grep -B1 "$1" | sort | uniq -u
+
+done
+
