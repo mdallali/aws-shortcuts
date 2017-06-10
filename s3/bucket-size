@@ -4,17 +4,17 @@
 # Script that counts number of objects and total S3 bucket size in GB
 #####################################################################
 function calc () {
-    awk "BEGIN { print "$*" ; }"
+    awk "BEGIN { print $* ; }"
         }
 
 PREFIX=$2
 BUCKET=$1
 
-size=$(aws s3api list-objects --bucket $BUCKET --prefix "$PREFIX" --output json --query 'sum(Contents[].Size)')
-numberOfObjects=$(aws s3api list-objects --bucket $BUCKET --prefix "$PREFIX" --output json --query 'length(Contents[])')
+size=$(aws s3api list-objects --bucket "$BUCKET" --prefix "$PREFIX" --output json --query 'sum(Contents[].Size)')
+numberOfObjects=$(aws s3api list-objects --bucket "$BUCKET" --prefix "$PREFIX" --output json --query 'length(Contents[])')
 
-sizeMB=$(calc $size/1048576)
-sizeGB=$(calc $size/1073741824)
+sizeMB=$(calc "$size"/1048576)
+sizeGB=$(calc "$size"/1073741824)
 echo " Bucket Size in MB : $sizeMB "
 echo " Bucket Size in GB : $sizeGB "
 echo " Number of objects : $numberOfObjects "
