@@ -10,7 +10,7 @@ if [[ -z $1 ]]; then
 fi
 
 # set the bucket nemae
-bucket=$1
+BUCKET=$1
 
 # set a prefix (optional, if not set, this will apply to the whole bucket)
 defaultPrefix=""
@@ -21,4 +21,4 @@ accountID="$(aws s3api list-buckets --output text --query 'Owner.ID')"
 
 #find objects that are not owned by me
 
-aws s3api list-objects --bucket $bucket --prefix "$PREFIX" --output text --query  'Contents[?Owner.ID!=`'$accountID'`].Key'
+aws s3api list-objects --bucket "$BUCKET" --prefix "$PREFIX" --output text --query  'Contents[?Owner.ID!=`'$accountID'`].Key'
