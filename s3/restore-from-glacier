@@ -4,7 +4,7 @@
 # the file needs to remain available
 
 if [[ -z $1 ]]; then
-	echo "Usage : $0 bucket_name [prefix] [restore_days]"
+	echo "Usage : $0 bucket_name [prefix] [restore_days] [type_of_restore]"
 	echo ""
 	echo -e "  \e[32mbucket_name \e[39m: Name of the bucket from which to restore files"
 	echo -e "  \e[32mprefix \e[39m: prefix under which to look for files, defaults to \"\" which means whole bucket"
