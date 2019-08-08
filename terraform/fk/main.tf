@@ -11,7 +11,7 @@ variable "accounts" {
 data "template_file" "cross-account" {
   template = "${file("templates/cross-account-policy.tpl")}"
   vars {
-    role_arn = "${join(",", formatlist("arn:aws:iam::%s:role/ReadOnlyCrossAccount", var.accounts))}"
+    role_arn = "${join("\",\"", formatlist("arn:aws:iam::%s:role/ReadOnlyCrossAccount", var.accounts))}"
   }
 }
 
