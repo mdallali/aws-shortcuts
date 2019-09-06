@@ -1,7 +1,6 @@
 #!/bin/bash
 ###############################################################################################################
 # this script will acuire the list of objects not owned by the bucket owner and make them owned by the latter.#
-# it also supports a PREFIX as an argument.                                                                   #
 ###############################################################################################################
 
 if [[ -z $1 ]]; then
