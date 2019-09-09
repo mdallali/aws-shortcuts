@@ -56,7 +56,8 @@ pipelines:
             tasks:
             - exec:
                 arguments:
-                - '#{BUCKET}' '#{PREFIX}'
+                - '#{BUCKET}'
+                - '#{PREFIX}'
                 command: ./bucket-size
                 working_directory: s3/
                 run_if: passed
