@@ -1,0 +1,67 @@
+format_version: 3
+pipelines:
+  myThirdPipeline:
+    group: defaultGroup
+    label_template: ${COUNT}
+    lock_behavior: none
+    display_order: -1
+    environment_variables:
+      OMG_IT_WORKS: OMG IT IS From The Repo
+    materials:
+      git:
+        git: https://github.com/mdallali/aws-shortcuts.git
+        username: mdallali
+        shallow_clone: false
+        auto_update: true
+        branch: master
+        encrypted_password: AES:MsEiU1Yy1C9WH3WD8lfYoA==:d68iTM+IHXZZ90icrG2GiA==
+      upstream:
+        pipeline: mySecondPipeline
+        stage: RunShell
+    stages:
+    - myFirstStage:
+        fetch_materials: true
+        keep_artifacts: false
+        clean_workspace: false
+        approval:
+          type: success
+        jobs:
+          Job1:
+            timeout: 0
+            tasks:
+            - exec:
+                arguments:
+                - -c
+                - 'echo This Job Was triggered by $GO_TRIGGER_USER'
+                command: /bin/bash
+                run_if: passed
+          Job2:
+            timeout: 0
+            tasks:
+            - exec:
+                arguments:
+                - -c
+                - 'echo Building from revision $GO_REVISION_GIT - This is Job $GO_JOB_NAME'
+                command: /bin/bash
+                run_if: passed
+    - RunShell:
+        fetch_materials: true
+        keep_artifacts: false
+        clean_workspace: false
+        approval:
+          type: manual
+        jobs:
+          BucketSize:
+            timeout: 0
+            tasks:
+            - exec:
+                arguments:
+                - '#{BUCKET}'
+                - '#{PREFIX}'
+                command: ./bucket-size
+                working_directory: s3/
+                run_if: passed
+    parameters:
+      MY_PIPELINE_PARAMETER: thisIsTheParameterLadiesAndGents
+      BUCKET: nds-documentation-website
+      PREFIX: maven-site/
