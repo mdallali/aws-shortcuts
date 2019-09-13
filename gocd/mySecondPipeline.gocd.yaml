@@ -15,9 +15,6 @@ pipelines:
         auto_update: true
         branch: master
         encrypted_password: AES:MsEiU1Yy1C9WH3WD8lfYoA==:d68iTM+IHXZZ90icrG2GiA==
-      upstream:
-        pipeline: myFirstPipeline
-        stage: RunShell
     stages:
     - myFirstStage:
         fetch_materials: true
@@ -32,7 +29,13 @@ pipelines:
             - exec:
                 arguments:
                 - -c
-                - echo $SHELL $GO_PIPELINE_LABEL Hello From Job 1
+                - echo $SHELL $GO_PIPELINE_LABEL Hello From $GO_JOB_NAME First Task
+                command: /bin/bash
+                run_if: passed
+            - exec:
+                arguments:
+                - -c
+                - echo $SHELL $GO_PIPELINE_LABEL Hello From $GO_JOB_NAME Second Task
                 command: /bin/bash
                 run_if: passed
           Job2:
