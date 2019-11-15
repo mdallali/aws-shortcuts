@@ -21,4 +21,4 @@ accountID="$(aws s3api list-buckets --output text --query 'Owner.ID')"
 
 #find objects that are not owned by me
 
-aws s3api list-objects --bucket "$BUCKET" --prefix "$PREFIX" --output text --query  'Contents[?Owner.ID!=`'$accountID'`].Key'
+aws s3api list-objects --bucket "$BUCKET" --prefix "$PREFIX" --output text --query  'Contents[?Owner.ID!=`'$accountID'`].[Key,Owner.DisplayName]'
